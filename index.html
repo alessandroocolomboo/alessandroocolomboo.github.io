@@ -204,7 +204,7 @@ const GITHUB = { utente: "", repository: "" };
 
 <script>
 const $ = (id) => document.getElementById(id);
-const CONTATTI = "Contatti";
+const CONTATTI = "Contacts";
 const ESTENSIONI = /\.(jpe?g|png|webp|avif|gif)$/i;
 const slug = (s) => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -328,19 +328,19 @@ async function mostraPagina() {
     return;
   }
 
-  const stato = el("p", "vuoto"); stato.textContent = "Carico le foto…"; box.append(stato);
+  const stato = el("p", "vuoto"); stato.textContent = "Loading photos…"; box.append(stato);
   try {
     const percorsi = await leggiCartella(sezione ? slug(sezione) : "home");
     if (mio !== giro) return;
     lista = percorsi.map(p => ({ file: p.split("/").map(encodeURIComponent).join("/") }));
-    if (!lista.length) { stato.textContent = sezione ? "Ancora nessuna foto in questa sezione." : "Ancora nessuna foto."; return; }
+    if (!lista.length) { stato.textContent = sezione ? "No photos in this section." : "No photos here yet."; return; }
     stato.remove();
     box.append(griglia());
   } catch (e) {
     if (mio !== giro) return;
     stato.textContent = e.message === "limite"
-      ? "GitHub sta limitando le richieste da questa rete. Riprova tra qualche minuto."
-      : "Non riesco a leggere le foto in questo momento. Riprova tra poco.";
+      ? "Too many requests right now. Please try again in a few minutes."
+      : "Photos can't be loaded right now. Please try again shortly.";
   }
 }
 
@@ -362,7 +362,7 @@ function paginaContatti() {
   }
   if (!dl.children.length) {
     const p = el("p", "vuoto");
-    p.textContent = "Aggiungi email, telefono e Instagram in SITO, all'inizio di index.html.";
+    p.textContent = "Contact details coming soon.";
     return p;
   }
   return dl;
@@ -395,7 +395,7 @@ function griglia() {
     });
     caricaConRiserva(img, f.file, 900, () => {
       b.classList.add("rotta"); b.disabled = true;
-      b.dataset.msg = "Questa foto non si apre. Caricala in JPG.";
+      b.dataset.msg = "This photo can't be displayed.";
     });
     b.append(img);
     b.addEventListener("click", () => apri(i));
