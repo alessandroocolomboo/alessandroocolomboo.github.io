@@ -1,0 +1,471 @@
+<!doctype html>
+<!--
+  PORTFOLIO FOTOGRAFICO. Le foto si aggiungono caricandole nelle cartelle, senza toccare codice.
+
+  DOVE VANNO LE FOTO
+    foto/home        pagina di apertura
+    foto/motorsport  foto/sky  foto/nature  foto/street
+
+  AGGIUNGERE FOTO (anche da telefono, dal browser su github.com)
+    Entra nella cartella, Add file > Upload files, scegli le foto, Commit changes.
+    Dopo un paio di minuti sono online.
+    Ordine: alfabetico per nome file. Per sceglierlo, rinominale 01-..., 02-..., 03-...
+    Formati: JPG, PNG, WEBP. Le HEIC dell'iPhone non si vedono nella maggior parte dei browser.
+    Togliere una foto: aprila su GitHub, menu "..." > Delete file.
+
+  CREARE LE CARTELLE (una volta sola: GitHub non crea cartelle vuote)
+    Add file > Create new file, come nome scrivi  foto/home/leggimi.txt , una parola dentro, Commit.
+    Ripeti con foto/motorsport/leggimi.txt, foto/sky/..., foto/nature/..., foto/street/...
+
+  CONTATTI: si modificano qui sotto, in SITO.
+-->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<script>
+/* ===================== DA MODIFICARE (solo questo) ===================== */
+
+const SITO = {
+  nome: "Alessandro Colombo",
+  email: "",       // es. "nome@esempio.it"
+  telefono: "",    // es. "+39 333 123 4567"
+  instagram: "",   // es. "tuonome" (senza @)
+};
+
+// Voci del menu, in quest'ordine. Ognuna mostra la cartella foto/<nome in minuscolo>.
+const SEZIONI = ["Motorsport", "Sky", "Nature", "Street"];
+
+// true: il sito rimpicciolisce da solo le foto per farle caricare veloci (servizio gratuito images.weserv.nl).
+// false: mostra i file originali così come li carichi.
+const RIDIMENSIONA = true;
+
+// Lascia vuoto. Serve solo se un giorno colleghi un dominio tuo (es. alessandrocolombo.it).
+const GITHUB = { utente: "", repository: "" };
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Alessandro Colombo</title>
+<meta name="description" content="Fotografia di Alessandro Colombo: motorsport, sky, nature, street.">
+<meta property="og:title" content="Alessandro Colombo">
+<meta property="og:description" content="Motorsport, sky, nature, street.">
+<!-- Anteprima del link su WhatsApp/Instagram: togli il commento e metti l'indirizzo vero di una foto.
+<meta property="og:image" content="https://TUONOMEUTENTE.github.io/foto/copertina.jpg">
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nero: #000000;
+    --bianco: #FFFFFF;
+    --grigio: #8C8C8C;
+    --sagoma: #1A1A1A;
+    --gap: clamp(6px, .8vw, 10px);
+    --bordo: clamp(12px, 3vw, 40px);
+    --font: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--nero); color-scheme: dark; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--nero); color: var(--bianco);
+    font-family: var(--font); font-size: 1rem; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body:has(dialog[open]) { overflow: hidden; }
+  :focus-visible { outline: 2px solid var(--bianco); outline-offset: 3px; }
+
+  /* Testata: nome a sinistra, menu a destra */
+  .testa, .menu-testa {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--bordo) 14px;
+  }
+  .testa { position: sticky; top: 0; z-index: 10; background: var(--nero); }
+  .logo {
+    color: var(--bianco); text-decoration: none;
+    font-weight: 600; font-size: clamp(1.05rem, 1.6vw, 1.3rem); letter-spacing: .01em;
+  }
+  .icona-btn {
+    width: 44px; height: 44px; margin-right: -10px; display: grid; place-items: center;
+    background: none; border: 0; color: var(--bianco); cursor: pointer;
+  }
+  .icona-btn svg { width: 26px; height: 26px; }
+
+  /* Menu a tutto schermo */
+  dialog#menu {
+    position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; background: var(--nero); color: var(--bianco);
+  }
+  dialog#menu::backdrop { background: var(--nero); }
+  dialog#menu[open] { display: flex; flex-direction: column; animation: entra .2s ease-out; }
+  .menu-voci {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: clamp(14px, 3.2vh, 30px); padding: 0 var(--bordo) 10vh;
+  }
+  .menu-voci a {
+    color: var(--grigio); text-decoration: none;
+    font-weight: 500; font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: .01em;
+  }
+  .menu-voci a:hover, .menu-voci a[aria-current="page"] { color: var(--bianco); }
+  @keyframes entra { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Pagine */
+  .titolo {
+    margin: clamp(10px, 2.5vw, 28px) var(--bordo) clamp(16px, 2.5vw, 28px);
+    font-weight: 600; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.15; letter-spacing: .01em;
+  }
+  .avviso { margin: 4px var(--bordo) 16px; padding: 10px 14px; border: 1px solid #3A3A3A; color: #CFCFCF; font-size: .875rem; line-height: 1.45; }
+  .avviso code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9em; color: var(--bianco); }
+  .vuoto { margin: 0 var(--bordo); color: var(--grigio); }
+
+  .griglia { display: flex; align-items: flex-start; gap: var(--gap); padding: 0 var(--bordo); }
+  .colonna { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gap); }
+  .scatto { display: block; width: 100%; padding: 0; border: 0; background: var(--sagoma); cursor: zoom-in; position: relative; }
+  .scatto img { display: block; width: 100%; height: auto; }
+  .scatto.rotta { aspect-ratio: 3 / 2; cursor: default; }
+  .scatto.rotta img { display: none; }
+  .scatto.rotta::after {
+    content: attr(data-msg); position: absolute; inset: 0; display: grid; place-items: center;
+    padding: 12px; text-align: center; font-size: .8125rem; color: var(--grigio);
+  }
+
+  .contatti { margin: 0 var(--bordo); display: grid; gap: 28px; }
+  .contatti div { display: grid; gap: 4px; }
+  .contatti dt { font-size: .8125rem; color: var(--grigio); letter-spacing: .02em; }
+  .contatti dd { margin: 0; font-weight: 500; font-size: clamp(1.15rem, 2.4vw, 1.5rem); overflow-wrap: anywhere; }
+  .contatti a { color: var(--bianco); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, .35); }
+  .contatti a:hover { border-bottom-color: var(--bianco); }
+
+  .piede { padding: clamp(48px, 7vw, 88px) var(--bordo) 28px; color: var(--grigio); font-size: .75rem; letter-spacing: .02em; }
+
+  /* Foto a schermo intero */
+  dialog#lb {
+    position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; background: var(--nero); color: var(--bianco);
+  }
+  dialog#lb::backdrop { background: var(--nero); }
+  dialog#lb[open] { display: block; animation: entra .18s ease-out; }
+  .lb-figura {
+    margin: 0; height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto;
+    padding: calc(env(safe-area-inset-top, 0px) + 60px) clamp(8px, 5vw, 72px) env(safe-area-inset-bottom, 0px);
+  }
+  .lb-figura img { width: 100%; height: 100%; min-height: 0; object-fit: contain; display: block; user-select: none; }
+  .lb-didascalia { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; padding: 14px 4px 18px; font-size: .875rem; color: var(--grigio); }
+  .lb-conta { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .lb-btn { position: absolute; width: 48px; height: 48px; display: grid; place-items: center; background: none; border: 0; color: var(--bianco); cursor: pointer; }
+  .lb-btn svg { width: 26px; height: 26px; }
+  .lb-chiudi { top: calc(env(safe-area-inset-top, 0px) + 12px); right: calc(var(--bordo) - 10px); }
+  .lb-prec, .lb-succ { top: 50%; transform: translateY(-50%); }
+  .lb-prec { left: 4px; } .lb-succ { right: 4px; }
+  @media (hover: none) { .lb-prec, .lb-succ { display: none; } }
+  @media (prefers-reduced-motion: reduce) { dialog[open] { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="testa">
+  <a class="logo" id="logo" href="#"></a>
+  <button class="icona-btn" id="apri-menu" type="button" aria-label="Apri menu" aria-controls="menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6.5h18M3 12h18M3 17.5h18"/></svg>
+  </button>
+</header>
+
+<dialog id="menu" aria-label="Menu">
+  <div class="menu-testa">
+    <a class="logo" id="logo-menu" href="#"></a>
+    <button class="icona-btn" id="chiudi-menu" type="button" aria-label="Chiudi menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <nav class="menu-voci" id="voci"></nav>
+</dialog>
+
+<main id="pagina"></main>
+
+<footer class="piede" id="piede"></footer>
+
+<dialog id="lb" aria-label="Foto">
+  <figure class="lb-figura" id="lb-figura">
+    <img id="lb-img" alt="">
+    <figcaption class="lb-didascalia">
+      <span id="lb-testo"></span>
+      <span class="lb-conta" id="lb-conta"></span>
+    </figcaption>
+  </figure>
+  <button class="lb-btn lb-chiudi" id="lb-chiudi" type="button" aria-label="Chiudi">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <button class="lb-btn lb-prec" id="lb-prec" type="button" aria-label="Foto precedente">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4l-8 8 8 8"/></svg>
+  </button>
+  <button class="lb-btn lb-succ" id="lb-succ" type="button" aria-label="Foto successiva">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4l8 8-8 8"/></svg>
+  </button>
+</dialog>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const CONTATTI = "Contatti";
+const ESTENSIONI = /\.(jpe?g|png|webp|avif|gif)$/i;
+const slug = (s) => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
+
+/* Da quale repository leggere le cartelle: si ricava dall'indirizzo del sito */
+function trovaRepository() {
+  if (GITHUB.utente && GITHUB.repository) return { owner: GITHUB.utente, repo: GITHUB.repository };
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  if (!m) return null;
+  const primo = location.pathname.split("/").filter(Boolean)[0];
+  const repo = primo && !/\.html?$/i.test(primo) ? primo : `${m[1]}.github.io`;
+  return { owner: m[1], repo };
+}
+const repo = trovaRepository();
+const anteprima = !repo;
+
+async function leggiCartella(cartella) {
+  const chiave = "cartella:" + cartella;
+  try {
+    const c = JSON.parse(sessionStorage.getItem(chiave));
+    if (c && Date.now() - c.t < 5 * 60 * 1000) return c.foto;
+  } catch (e) {}
+  const url = `https://api.github.com/repos/${repo.owner}/${repo.repo}/contents/foto/${encodeURIComponent(cartella)}`;
+  const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+  if (r.status === 404) return [];
+  if (r.status === 403 || r.status === 429) throw new Error("limite");
+  if (!r.ok) throw new Error("errore");
+  const dati = await r.json();
+  const foto = (Array.isArray(dati) ? dati : [])
+    .filter(x => x.type === "file" && ESTENSIONI.test(x.name))
+    .map(x => x.path)
+    .sort((p, q) => p.localeCompare(q, undefined, { numeric: true, sensitivity: "base" }));
+  try { sessionStorage.setItem(chiave, JSON.stringify({ t: Date.now(), foto })); } catch (e) {}
+  return foto;
+}
+
+/* Versione rimpicciolita della foto; se il servizio non risponde si usa l'originale */
+function versione(file, larghezza) {
+  if (!RIDIMENSIONA || file.startsWith("data:")) return file;
+  const assoluto = new URL(file, location.href).href;
+  return `https://images.weserv.nl/?url=${encodeURIComponent(assoluto)}&w=${larghezza}&we&q=82&output=jpg`;
+}
+function caricaConRiserva(img, file, larghezza, seFallisce) {
+  img.onerror = () => {
+    if (img.dataset.riserva !== file && img.src !== new URL(file, location.href).href) {
+      img.dataset.riserva = file; img.src = file;
+    } else if (seFallisce) seFallisce();
+  };
+  img.src = versione(file, larghezza);
+}
+
+function sagome(quante, seme) {
+  const forme = [[3,2],[2,3],[3,2],[3,2],[2,3],[16,9],[3,2],[2,3],[3,2],[3,2],[2,3],[3,2]];
+  const toni = ["#1C1C1C", "#232323", "#191919", "#2A2A2A"];
+  return Array.from({ length: quante }, (_, i) => {
+    const [w, h] = forme[(i + seme) % forme.length];
+    const W = w * 120, H = h * 120;
+    const s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
+      `<rect width="100%" height="100%" fill="${toni[(i + seme) % 4]}"/><text x="50%" y="50%" text-anchor="middle" ` +
+      `dominant-baseline="middle" font-family="Arial, sans-serif" font-size="${Math.min(W, H) / 9}" fill="#4A4A4A">${w}:${h}</text></svg>`;
+    return { file: "data:image/svg+xml," + encodeURIComponent(s) };
+  });
+}
+
+/* Testata e menu */
+function intestazione() {
+  $("logo").textContent = SITO.nome;
+  $("logo-menu").textContent = SITO.nome;
+  $("piede").textContent = `© ${new Date().getFullYear()} ${SITO.nome}`;
+  [...SEZIONI, CONTATTI].forEach(nome => {
+    const a = el("a"); a.href = "#" + slug(nome); a.textContent = nome;
+    a.addEventListener("click", () => menu.close());
+    $("voci").append(a);
+  });
+}
+const menu = $("menu");
+$("apri-menu").addEventListener("click", () => { menu.showModal(); $("apri-menu").setAttribute("aria-expanded", "true"); });
+$("chiudi-menu").addEventListener("click", () => menu.close());
+menu.addEventListener("close", () => $("apri-menu").setAttribute("aria-expanded", "false"));
+$("logo-menu").addEventListener("click", () => menu.close());
+
+/* Pagine */
+let lista = [];
+let titoloPagina = "";
+let giro = 0;
+
+async function mostraPagina() {
+  const mio = ++giro;
+  const richiesta = decodeURIComponent(location.hash.slice(1));
+  const sezione = SEZIONI.find(k => slug(k) === richiesta);
+  const contatti = richiesta === slug(CONTATTI);
+  const box = $("pagina");
+  box.replaceChildren();
+  document.querySelectorAll("#voci a").forEach(a => {
+    const attiva = (sezione && a.textContent === sezione) || (contatti && a.textContent === CONTATTI);
+    if (attiva) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
+
+  if (anteprima) {
+    const p = el("p", "avviso");
+    p.innerHTML = "Anteprima: queste sono sagome. Online su GitHub il sito mostra le foto che carichi nelle cartelle " +
+      "<code>foto/home</code>, " + SEZIONI.map(s => `<code>foto/${slug(s)}</code>`).join(", ") + ".";
+    box.append(p);
+  }
+
+  if (contatti) {
+    titoloPagina = CONTATTI;
+    document.title = `${CONTATTI} | ${SITO.nome}`;
+    box.append(titolo(CONTATTI), paginaContatti());
+    return;
+  }
+
+  titoloPagina = sezione || SITO.nome;
+  document.title = sezione ? `${sezione} | ${SITO.nome}` : SITO.nome;
+  if (sezione) box.append(titolo(sezione));
+
+  if (anteprima) {
+    lista = sezione ? sagome(9, SEZIONI.indexOf(sezione) * 3) : sagome(12, 0);
+    box.append(griglia());
+    return;
+  }
+
+  const stato = el("p", "vuoto"); stato.textContent = "Carico le foto…"; box.append(stato);
+  try {
+    const percorsi = await leggiCartella(sezione ? slug(sezione) : "home");
+    if (mio !== giro) return;
+    lista = percorsi.map(p => ({ file: p.split("/").map(encodeURIComponent).join("/") }));
+    if (!lista.length) { stato.textContent = sezione ? "Ancora nessuna foto in questa sezione." : "Ancora nessuna foto."; return; }
+    stato.remove();
+    box.append(griglia());
+  } catch (e) {
+    if (mio !== giro) return;
+    stato.textContent = e.message === "limite"
+      ? "GitHub sta limitando le richieste da questa rete. Riprova tra qualche minuto."
+      : "Non riesco a leggere le foto in questo momento. Riprova tra poco.";
+  }
+}
+
+function titolo(testo) { const h = el("h1", "titolo"); h.textContent = testo; return h; }
+
+function paginaContatti() {
+  const dl = el("dl", "contatti");
+  const riga = (etichetta, testo, href, esterno) => {
+    const d = el("div"); const dt = el("dt"); const dd = el("dd"); const a = el("a");
+    dt.textContent = etichetta; a.textContent = testo; a.href = href;
+    if (esterno) { a.target = "_blank"; a.rel = "noopener"; }
+    dd.append(a); d.append(dt, dd); dl.append(d);
+  };
+  if (SITO.email) riga("Email", SITO.email, `mailto:${SITO.email}`);
+  if (SITO.telefono) riga("Telefono", SITO.telefono, `tel:${SITO.telefono.replace(/[^\d+]/g, "")}`);
+  if (SITO.instagram) {
+    const h = SITO.instagram.replace(/^@/, "");
+    riga("Instagram", "@" + h, `https://instagram.com/${encodeURIComponent(h)}`, true);
+  }
+  if (!dl.children.length) {
+    const p = el("p", "vuoto");
+    p.textContent = "Aggiungi email, telefono e Instagram in SITO, all'inizio di index.html.";
+    return p;
+  }
+  return dl;
+}
+
+/* Griglia: ogni foto va nella colonna più corta, nessun ritaglio */
+const proporzioni = new Map();
+let tessere = [], colonneAttuali = 0, attesaDisponi = 0;
+
+function quanteColonne() { return innerWidth >= 1000 ? 3 : 2; }
+
+function griglia() {
+  const g = el("div", "griglia"); g.id = "griglia";
+  colonneAttuali = quanteColonne();
+  for (let k = 0; k < colonneAttuali; k++) g.append(el("div", "colonna"));
+  tessere = lista.map((f, i) => {
+    const b = el("button", "scatto"); b.type = "button";
+    b.setAttribute("aria-label", `Apri foto ${i + 1} di ${lista.length}`);
+    const img = el("img");
+    img.alt = `${titoloPagina}, foto ${i + 1}`;
+    img.decoding = "async";
+    img.loading = i < colonneAttuali * 2 ? "eager" : "lazy";
+    const r = proporzioni.get(f.file);
+    img.style.aspectRatio = r ? `1 / ${r}` : "3 / 2";
+    img.addEventListener("load", () => {
+      if (!img.naturalWidth) return;
+      img.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+      proporzioni.set(f.file, img.naturalHeight / img.naturalWidth);
+      cancelAnimationFrame(attesaDisponi); attesaDisponi = requestAnimationFrame(() => disponi());
+    });
+    caricaConRiserva(img, f.file, 900, () => {
+      b.classList.add("rotta"); b.disabled = true;
+      b.dataset.msg = "Questa foto non si apre. Caricala in JPG.";
+    });
+    b.append(img);
+    b.addEventListener("click", () => apri(i));
+    return b;
+  });
+  disponi(g);
+  return g;
+}
+
+function disponi(g = $("griglia")) {
+  if (!g) return;
+  const colonne = [...g.children];
+  const altezze = colonne.map(() => 0);
+  tessere.forEach((b, i) => {
+    const k = altezze.indexOf(Math.min(...altezze));
+    colonne[k].append(b);
+    altezze[k] += (proporzioni.get(lista[i].file) ?? 2 / 3) + 0.03;
+  });
+}
+
+/* Foto a schermo intero */
+const lb = $("lb");
+let indice = 0;
+function apri(i) { indice = i; mostra(); if (!lb.open) lb.showModal(); }
+function mostra() {
+  const f = lista[indice];
+  const img = $("lb-img");
+  delete img.dataset.riserva;
+  caricaConRiserva(img, f.file, 2048);
+  img.alt = `${titoloPagina}, foto ${indice + 1}`;
+  $("lb-testo").textContent = "";
+  $("lb-conta").textContent = `${indice + 1} / ${lista.length}`;
+  const piu = lista.length > 1;
+  $("lb-prec").hidden = !piu; $("lb-succ").hidden = !piu;
+  [indice - 1, indice + 1].forEach(j => {
+    const v = lista[(j + lista.length) % lista.length];
+    if (v) { const p = new Image(); p.src = versione(v.file, 2048); }
+  });
+}
+function scorri(d) {
+  if (lista.length < 2) return;
+  indice = (indice + d + lista.length) % lista.length;
+  mostra();
+}
+$("lb-chiudi").addEventListener("click", () => lb.close());
+$("lb-prec").addEventListener("click", () => scorri(-1));
+$("lb-succ").addEventListener("click", () => scorri(1));
+lb.addEventListener("click", e => { if (e.target === lb || e.target === $("lb-figura")) lb.close(); });
+lb.addEventListener("keydown", e => { if (e.key === "ArrowLeft") scorri(-1); if (e.key === "ArrowRight") scorri(1); });
+let x0 = null;
+lb.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 50) scorri(dx < 0 ? 1 : -1);
+  x0 = null;
+}, { passive: true });
+
+addEventListener("hashchange", () => { if (menu.open) menu.close(); mostraPagina(); scrollTo(0, 0); });
+let attesaResize = 0;
+addEventListener("resize", () => {
+  cancelAnimationFrame(attesaResize);
+  attesaResize = requestAnimationFrame(() => {
+    if ($("griglia") && quanteColonne() !== colonneAttuali) $("griglia").replaceWith(griglia());
+  });
+});
+
+intestazione();
+mostraPagina();
+</script>
+</body>
+</html>
