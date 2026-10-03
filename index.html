@@ -1,43 +1,43 @@
 <!doctype html>
 <!--
   PORTFOLIO FOTOGRAFICO. Le foto si aggiungono caricandole nelle cartelle, senza toccare codice.
-
+ 
   DOVE VANNO LE FOTO
     foto/home        pagina di apertura
     foto/motorsport  foto/sky  foto/nature  foto/street
-
+ 
   AGGIUNGERE FOTO (anche da telefono, dal browser su github.com)
     Entra nella cartella, Add file > Upload files, scegli le foto, Commit changes.
     Dopo un paio di minuti sono online.
     Ordine: alfabetico per nome file. Per sceglierlo, rinominale 01-..., 02-..., 03-...
     Formati: JPG, PNG, WEBP. Le HEIC dell'iPhone non si vedono nella maggior parte dei browser.
     Togliere una foto: aprila su GitHub, menu "..." > Delete file.
-
+ 
   CREARE LE CARTELLE (una volta sola: GitHub non crea cartelle vuote)
     Add file > Create new file, come nome scrivi  foto/home/leggimi.txt , una parola dentro, Commit.
     Ripeti con foto/motorsport/leggimi.txt, foto/sky/..., foto/nature/..., foto/street/...
-
+ 
   CONTATTI: si modificano qui sotto, in SITO.
 -->
-<html lang="it">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <script>
 /* ===================== DA MODIFICARE (solo questo) ===================== */
-
+ 
 const SITO = {
-  nome: "Alessandro Colombo - Portfolio",
+  nome: "Alessandro Colombo",
   email: "alessandroocolombo@gmail.com",       // es. "nome@esempio.it"
   instagram: "alessandrocolombo.pic",   // es. "tuonome" (senza @)
 };
-
+ 
 // Voci del menu, in quest'ordine. Ognuna mostra la cartella foto/<nome in minuscolo>.
 const SEZIONI = ["Motorsport", "Sky", "Nature", "Street"];
-
+ 
 // true: il sito rimpicciolisce da solo le foto per farle caricare veloci (servizio gratuito images.weserv.nl).
 // false: mostra i file originali così come li carichi.
 const RIDIMENSIONA = true;
-
+ 
 // Lascia vuoto. Serve solo se un giorno colleghi un dominio tuo (es. alessandrocolombo.it).
 const GITHUB = { utente: "", repository: "" };
 </script>
@@ -46,12 +46,12 @@ const GITHUB = { utente: "", repository: "" };
 <link rel="icon" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 <title>Alessandro Colombo</title>
-<meta name="description" content="Fotografia di Alessandro Colombo: motorsport, sky, nature, street.">
+<meta name="description" content="Photography by Alessandro Colombo: motorsport, sky, nature, street.">
 <meta property="og:title" content="Alessandro Colombo">
 <meta property="og:description" content="Motorsport, sky, nature, street.">
 <!-- Anteprima del link su WhatsApp/Instagram: togli il commento e metti l'indirizzo vero di una foto.-->
-<meta property="og:image" content="https://alessandroocolomboo.github.io/foto/home/favicon.png">
-
+<meta property="og:image" content="https://alessandroocolomboo.github.io/favicon.png">
+ 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
@@ -61,7 +61,8 @@ const GITHUB = { utente: "", repository: "" };
     --bianco: #FFFFFF;
     --grigio: #8C8C8C;
     --sagoma: #1A1A1A;
-    --gap: clamp(6px, .8vw, 10px);
+    --gap: clamp(6px, .6vw, 8px);
+    --colonna: 1200px;   /* larghezza massima di foto e testi */
     --bordo: clamp(12px, 3vw, 40px);
     --font: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
@@ -75,7 +76,7 @@ const GITHUB = { utente: "", repository: "" };
   }
   body:has(dialog[open]) { overflow: hidden; }
   :focus-visible { outline: 2px solid var(--bianco); outline-offset: 3px; }
-
+ 
   /* Testata: nome a sinistra, menu a destra */
   .testa, .menu-testa {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -91,7 +92,7 @@ const GITHUB = { utente: "", repository: "" };
     background: none; border: 0; color: var(--bianco); cursor: pointer;
   }
   .icona-btn svg { width: 26px; height: 26px; }
-
+ 
   /* Menu a tutto schermo */
   dialog#menu {
     position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
@@ -109,8 +110,9 @@ const GITHUB = { utente: "", repository: "" };
   }
   .menu-voci a:hover, .menu-voci a[aria-current="page"] { color: var(--bianco); }
   @keyframes entra { from { opacity: 0; } to { opacity: 1; } }
-
-  /* Pagine */
+ 
+  /* Pagine: tutto il contenuto sta in una colonna centrata */
+  #pagina, .piede { max-width: calc(var(--colonna) + 2 * var(--bordo)); margin-inline: auto; }
   .titolo {
     margin: clamp(10px, 2.5vw, 28px) var(--bordo) clamp(16px, 2.5vw, 28px);
     font-weight: 600; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.15; letter-spacing: .01em;
@@ -118,27 +120,32 @@ const GITHUB = { utente: "", repository: "" };
   .avviso { margin: 4px var(--bordo) 16px; padding: 10px 14px; border: 1px solid #3A3A3A; color: #CFCFCF; font-size: .875rem; line-height: 1.45; }
   .avviso code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9em; color: var(--bianco); }
   .vuoto { margin: 0 var(--bordo); color: var(--grigio); }
-
-  .griglia { display: flex; align-items: flex-start; gap: var(--gap); padding: 0 var(--bordo); }
-  .colonna { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: var(--gap); }
-  .scatto { display: block; width: 100%; padding: 0; border: 0; background: var(--sagoma); cursor: zoom-in; position: relative; }
-  .scatto img { display: block; width: 100%; height: auto; }
-  .scatto.rotta { aspect-ratio: 3 / 2; cursor: default; }
+ 
+  .griglia { display: flex; flex-direction: column; gap: var(--gap); padding: 0 var(--bordo); }
+  .riga { display: flex; gap: var(--gap); }
+  /* Ogni foto prende spazio in proporzione al suo formato: così tutte le foto della riga hanno la stessa altezza */
+  .scatto {
+    flex: var(--r, 1.5) 1 0px; min-width: 0; aspect-ratio: var(--r, 1.5);
+    display: block; padding: 0; border: 0; background: var(--sagoma); cursor: zoom-in; position: relative; overflow: hidden;
+  }
+  .scatto img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .riempi { flex: var(--r) 1 0px; }
+  .scatto.rotta { cursor: default; }
   .scatto.rotta img { display: none; }
   .scatto.rotta::after {
     content: attr(data-msg); position: absolute; inset: 0; display: grid; place-items: center;
     padding: 12px; text-align: center; font-size: .8125rem; color: var(--grigio);
   }
-
+ 
   .contatti { margin: 0 var(--bordo); display: grid; gap: 28px; }
   .contatti div { display: grid; gap: 4px; }
   .contatti dt { font-size: .8125rem; color: var(--grigio); letter-spacing: .02em; }
   .contatti dd { margin: 0; font-weight: 500; font-size: clamp(1.15rem, 2.4vw, 1.5rem); overflow-wrap: anywhere; }
   .contatti a { color: var(--bianco); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, .35); }
   .contatti a:hover { border-bottom-color: var(--bianco); }
-
+ 
   .piede { padding: clamp(48px, 7vw, 88px) var(--bordo) 28px; color: var(--grigio); font-size: .75rem; letter-spacing: .02em; }
-
+ 
   /* Foto a schermo intero */
   dialog#lb {
     position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
@@ -163,29 +170,29 @@ const GITHUB = { utente: "", repository: "" };
 </style>
 </head>
 <body>
-
+ 
 <header class="testa">
   <a class="logo" id="logo" href="#"></a>
-  <button class="icona-btn" id="apri-menu" type="button" aria-label="Apri menu" aria-controls="menu" aria-expanded="false">
+  <button class="icona-btn" id="apri-menu" type="button" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6.5h18M3 12h18M3 17.5h18"/></svg>
   </button>
 </header>
-
+ 
 <dialog id="menu" aria-label="Menu">
   <div class="menu-testa">
     <a class="logo" id="logo-menu" href="#"></a>
-    <button class="icona-btn" id="chiudi-menu" type="button" aria-label="Chiudi menu">
+    <button class="icona-btn" id="chiudi-menu" type="button" aria-label="Close menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg>
     </button>
   </div>
   <nav class="menu-voci" id="voci"></nav>
 </dialog>
-
+ 
 <main id="pagina"></main>
-
+ 
 <footer class="piede" id="piede"></footer>
-
-<dialog id="lb" aria-label="Foto">
+ 
+<dialog id="lb" aria-label="Photo">
   <figure class="lb-figura" id="lb-figura">
     <img id="lb-img" alt="">
     <figcaption class="lb-didascalia">
@@ -193,17 +200,17 @@ const GITHUB = { utente: "", repository: "" };
       <span class="lb-conta" id="lb-conta"></span>
     </figcaption>
   </figure>
-  <button class="lb-btn lb-chiudi" id="lb-chiudi" type="button" aria-label="Chiudi">
+  <button class="lb-btn lb-chiudi" id="lb-chiudi" type="button" aria-label="Close">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg>
   </button>
-  <button class="lb-btn lb-prec" id="lb-prec" type="button" aria-label="Foto precedente">
+  <button class="lb-btn lb-prec" id="lb-prec" type="button" aria-label="Previous photo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4l-8 8 8 8"/></svg>
   </button>
-  <button class="lb-btn lb-succ" id="lb-succ" type="button" aria-label="Foto successiva">
+  <button class="lb-btn lb-succ" id="lb-succ" type="button" aria-label="Next photo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4l8 8-8 8"/></svg>
   </button>
 </dialog>
-
+ 
 <script>
 const $ = (id) => document.getElementById(id);
 const CONTATTI = "Contacts";
@@ -211,7 +218,7 @@ const ESTENSIONI = /\.(jpe?g|png|webp|avif|gif)$/i;
 const slug = (s) => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
-
+ 
 /* Da quale repository leggere le cartelle: si ricava dall'indirizzo del sito */
 function trovaRepository() {
   if (GITHUB.utente && GITHUB.repository) return { owner: GITHUB.utente, repo: GITHUB.repository };
@@ -223,7 +230,7 @@ function trovaRepository() {
 }
 const repo = trovaRepository();
 const anteprima = !repo;
-
+ 
 async function leggiCartella(cartella) {
   const chiave = "cartella:" + cartella;
   try {
@@ -243,7 +250,7 @@ async function leggiCartella(cartella) {
   try { sessionStorage.setItem(chiave, JSON.stringify({ t: Date.now(), foto })); } catch (e) {}
   return foto;
 }
-
+ 
 /* Versione rimpicciolita della foto; se il servizio non risponde si usa l'originale */
 function versione(file, larghezza) {
   if (!RIDIMENSIONA || file.startsWith("data:")) return file;
@@ -258,7 +265,7 @@ function caricaConRiserva(img, file, larghezza, seFallisce) {
   };
   img.src = versione(file, larghezza);
 }
-
+ 
 function sagome(quante, seme) {
   const forme = [[3,2],[2,3],[3,2],[3,2],[2,3],[16,9],[3,2],[2,3],[3,2],[3,2],[2,3],[3,2]];
   const toni = ["#1C1C1C", "#232323", "#191919", "#2A2A2A"];
@@ -271,7 +278,7 @@ function sagome(quante, seme) {
     return { file: "data:image/svg+xml," + encodeURIComponent(s) };
   });
 }
-
+ 
 /* Testata e menu */
 function intestazione() {
   $("logo").textContent = SITO.nome;
@@ -288,12 +295,12 @@ $("apri-menu").addEventListener("click", () => { menu.showModal(); $("apri-menu"
 $("chiudi-menu").addEventListener("click", () => menu.close());
 menu.addEventListener("close", () => $("apri-menu").setAttribute("aria-expanded", "false"));
 $("logo-menu").addEventListener("click", () => menu.close());
-
+ 
 /* Pagine */
 let lista = [];
 let titoloPagina = "";
 let giro = 0;
-
+ 
 async function mostraPagina() {
   const mio = ++giro;
   const richiesta = decodeURIComponent(location.hash.slice(1));
@@ -305,37 +312,37 @@ async function mostraPagina() {
     const attiva = (sezione && a.textContent === sezione) || (contatti && a.textContent === CONTATTI);
     if (attiva) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
-
+ 
   if (anteprima) {
     const p = el("p", "avviso");
     p.innerHTML = "Anteprima: queste sono sagome. Online su GitHub il sito mostra le foto che carichi nelle cartelle " +
       "<code>foto/home</code>, " + SEZIONI.map(s => `<code>foto/${slug(s)}</code>`).join(", ") + ".";
     box.append(p);
   }
-
+ 
   if (contatti) {
     titoloPagina = CONTATTI;
     document.title = `${CONTATTI} | ${SITO.nome}`;
     box.append(titolo(CONTATTI), paginaContatti());
     return;
   }
-
+ 
   titoloPagina = sezione || SITO.nome;
   document.title = sezione ? `${sezione} | ${SITO.nome}` : SITO.nome;
   if (sezione) box.append(titolo(sezione));
-
+ 
   if (anteprima) {
     lista = sezione ? sagome(9, SEZIONI.indexOf(sezione) * 3) : sagome(12, 0);
     box.append(griglia());
     return;
   }
-
+ 
   const stato = el("p", "vuoto"); stato.textContent = "Loading photos…"; box.append(stato);
   try {
     const percorsi = await leggiCartella(sezione ? slug(sezione) : "home");
     if (mio !== giro) return;
     lista = percorsi.map(p => ({ file: p.split("/").map(encodeURIComponent).join("/") }));
-    if (!lista.length) { stato.textContent = sezione ? "No photos in this section." : "No photos here yet."; return; }
+    if (!lista.length) { stato.textContent = sezione ? "No photos here yet." : "No photos yet."; return; }
     stato.remove();
     box.append(griglia());
   } catch (e) {
@@ -345,9 +352,9 @@ async function mostraPagina() {
       : "Photos can't be loaded right now. Please try again shortly.";
   }
 }
-
+ 
 function titolo(testo) { const h = el("h1", "titolo"); h.textContent = testo; return h; }
-
+ 
 function paginaContatti() {
   const dl = el("dl", "contatti");
   const riga = (etichetta, testo, href, esterno) => {
@@ -357,7 +364,7 @@ function paginaContatti() {
     dd.append(a); d.append(dt, dd); dl.append(d);
   };
   if (SITO.email) riga("Email", SITO.email, `mailto:${SITO.email}`);
-  if (SITO.telefono) riga("Telefono", SITO.telefono, `tel:${SITO.telefono.replace(/[^\d+]/g, "")}`);
+  if (SITO.telefono) riga("Phone", SITO.telefono, `tel:${SITO.telefono.replace(/[^\d+]/g, "")}`);
   if (SITO.instagram) {
     const h = SITO.instagram.replace(/^@/, "");
     riga("Instagram", "@" + h, `https://instagram.com/${encodeURIComponent(h)}`, true);
@@ -369,33 +376,34 @@ function paginaContatti() {
   }
   return dl;
 }
-
-/* Griglia: ogni foto va nella colonna più corta, nessun ritaglio */
-const proporzioni = new Map();
-let tessere = [], colonneAttuali = 0, attesaDisponi = 0;
-
-function quanteColonne() { return innerWidth >= 1000 ? 3 : 2; }
-
+ 
+/* Griglia a righe: ogni riga è larga quanto la colonna e le sue foto hanno la stessa altezza */
+const proporzioni = (() => { try { return new Map(JSON.parse(localStorage.getItem("proporzioni") || "[]")); } catch (e) { return new Map(); } })();
+function salvaProporzioni() {
+  try { localStorage.setItem("proporzioni", JSON.stringify([...proporzioni].slice(-500))); } catch (e) {}
+}
+let tessere = [], attesaDisponi = 0;
+ 
+function altezzaIdeale(W) { return W < 600 ? 250 : W < 1000 ? 340 : 460; }
+ 
 function griglia() {
   const g = el("div", "griglia"); g.id = "griglia";
-  colonneAttuali = quanteColonne();
-  for (let k = 0; k < colonneAttuali; k++) g.append(el("div", "colonna"));
   tessere = lista.map((f, i) => {
     const b = el("button", "scatto"); b.type = "button";
-    b.setAttribute("aria-label", `Apri foto ${i + 1} di ${lista.length}`);
+    b.setAttribute("aria-label", `Open photo ${i + 1} of ${lista.length}`);
     const img = el("img");
-    img.alt = `${titoloPagina}, foto ${i + 1}`;
+    img.alt = `${titoloPagina}, photo ${i + 1}`;
     img.decoding = "async";
-    img.loading = i < colonneAttuali * 2 ? "eager" : "lazy";
-    const r = proporzioni.get(f.file);
-    img.style.aspectRatio = r ? `1 / ${r}` : "3 / 2";
+    img.loading = i < 6 ? "eager" : "lazy";
     img.addEventListener("load", () => {
       if (!img.naturalWidth) return;
-      img.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
-      proporzioni.set(f.file, img.naturalHeight / img.naturalWidth);
-      cancelAnimationFrame(attesaDisponi); attesaDisponi = requestAnimationFrame(() => disponi());
+      const r = img.naturalWidth / img.naturalHeight;
+      if (Math.abs((proporzioni.get(f.file) || 0) - r) > 0.01) {
+        proporzioni.set(f.file, r); salvaProporzioni();
+        cancelAnimationFrame(attesaDisponi); attesaDisponi = requestAnimationFrame(() => disponi());
+      }
     });
-    caricaConRiserva(img, f.file, 900, () => {
+    caricaConRiserva(img, f.file, 1200, () => {
       b.classList.add("rotta"); b.disabled = true;
       b.dataset.msg = "This photo can't be displayed.";
     });
@@ -403,21 +411,53 @@ function griglia() {
     b.addEventListener("click", () => apri(i));
     return b;
   });
+  requestAnimationFrame(() => disponi(g));
   disponi(g);
   return g;
 }
-
+ 
 function disponi(g = $("griglia")) {
-  if (!g) return;
-  const colonne = [...g.children];
-  const altezze = colonne.map(() => 0);
-  tessere.forEach((b, i) => {
-    const k = altezze.indexOf(Math.min(...altezze));
-    colonne[k].append(b);
-    altezze[k] += (proporzioni.get(lista[i].file) ?? 2 / 3) + 0.03;
+  if (!g || !tessere.length) return;
+  const stile = getComputedStyle(g);
+  const larghezzaBox = g.isConnected ? g.clientWidth : $("pagina").clientWidth;
+  const W = larghezzaBox - (parseFloat(stile.paddingLeft) || 0) - (parseFloat(stile.paddingRight) || 0);
+  if (W <= 0) return;
+  const gap = parseFloat(stile.rowGap) || 8;
+  const h0 = altezzaIdeale(W);
+  const rapporti = lista.map(f => proporzioni.get(f.file) || 1.5);
+ 
+  // Raggruppo le foto in righe: chiudo la riga quando è piena, scegliendo l'altezza più vicina a quella ideale
+  const righe = [];
+  let riga = [], somma = 0;
+  rapporti.forEach((r, i) => {
+    riga.push(i); somma += r;
+    if (somma * h0 + (riga.length - 1) * gap >= W) {
+      const hCon = (W - (riga.length - 1) * gap) / somma;
+      const hSenza = riga.length > 1 ? (W - (riga.length - 2) * gap) / (somma - r) : Infinity;
+      if (Math.abs(hSenza - h0) < Math.abs(hCon - h0)) {
+        riga.pop(); righe.push({ indici: riga, piena: true });
+        riga = [i]; somma = r;
+      } else {
+        righe.push({ indici: riga, piena: true });
+        riga = []; somma = 0;
+      }
+    }
+  });
+  if (riga.length) righe.push({ indici: riga, piena: false, somma });
+ 
+  g.replaceChildren();
+  righe.forEach(({ indici, piena, somma }) => {
+    const d = el("div", "riga");
+    indici.forEach(i => { tessere[i].style.setProperty("--r", rapporti[i]); d.append(tessere[i]); });
+    if (!piena) {
+      // ultima riga incompleta: resta all'altezza ideale invece di allargarsi
+      const vuoto = (W - indici.length * gap) / h0 - somma;
+      if (vuoto > 0) { const f = el("div", "riempi"); f.style.setProperty("--r", vuoto); d.append(f); }
+    }
+    g.append(d);
   });
 }
-
+ 
 /* Foto a schermo intero */
 const lb = $("lb");
 let indice = 0;
@@ -427,7 +467,7 @@ function mostra() {
   const img = $("lb-img");
   delete img.dataset.riserva;
   caricaConRiserva(img, f.file, 2048);
-  img.alt = `${titoloPagina}, foto ${indice + 1}`;
+  img.alt = `${titoloPagina}, photo ${indice + 1}`;
   $("lb-testo").textContent = "";
   $("lb-conta").textContent = `${indice + 1} / ${lista.length}`;
   const piu = lista.length > 1;
@@ -455,18 +495,19 @@ lb.addEventListener("touchend", e => {
   if (Math.abs(dx) > 50) scorri(dx < 0 ? 1 : -1);
   x0 = null;
 }, { passive: true });
-
+ 
 addEventListener("hashchange", () => { if (menu.open) menu.close(); mostraPagina(); scrollTo(0, 0); });
 let attesaResize = 0;
 addEventListener("resize", () => {
   cancelAnimationFrame(attesaResize);
   attesaResize = requestAnimationFrame(() => {
-    if ($("griglia") && quanteColonne() !== colonneAttuali) $("griglia").replaceWith(griglia());
+    disponi();
   });
 });
-
+ 
 intestazione();
 mostraPagina();
 </script>
 </body>
 </html>
+ 
